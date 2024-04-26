@@ -2,7 +2,8 @@
 % Please edit documentation in R/parsing.R
 \name{parsing_nossaflex}
 \alias{parsing_nossaflex}
-\title{Parsing nossaflex names into a data.frame}
+\title{Parsing NOSSAFLEX names
+Parsing NOSSAFLEX names from a text file to a data.frame}
 \usage{
 parsing_nossaflex(filenames)
 }
@@ -17,13 +18,13 @@ FL = Focal Length
 EX = Exposure (Over/under)}
 }
 \value{
-a data.frame with standard columns from nossaflex convention.
+A data.frame with standard columns from nossaflex convention.
 }
 \description{
-Parsing nossaflex names into a data.frame
+Parsing NOSSAFLEX names
+Parsing NOSSAFLEX names from a text file to a data.frame
 }
 \examples{
-filenames = c("NO01_SS1s_A5.6_FL35_EX-2", "NO02_SS125_A5.6_FL35_EX+1")
+filenames = c("NO01_SS1s_A5.6_FL50_EX-2", "NO02_SS125_A5.6_FL50_EX+1")
 parsing_nossaflex(filenames)
-
 }

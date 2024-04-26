@@ -4,24 +4,39 @@
 \alias{editing_exif}
 \title{Batch editing of exif data}
 \usage{
-editing_exif(files, metadata)
+editing_exif(files, metadata, extra_tags)
 }
 \arguments{
 \item{files}{a character vector of paths with complete file.names like what
-\code{\link{list.files}} or
-\code{\link[tools:fileutils]{tools::list_files_with_exts}} gives when
-used with `full.names = TRUE`}
+\code{\link{list.files}} when used with `full.names = TRUE` or
+\code{\link[tools:fileutils]{tools::list_files_with_exts}} gives}
 
-\item{metadata}{a data.frame as provided by \code{\link{parsing_nossaflex}}.}
+\item{metadata}{a data.frame as provided by \code{\link{parsing_nossaflex}},
+\code{\link{parsing_custom}} or \code{\link{parsing_json}}.}
 }
 \description{
 Batch editing of exif data
 }
 \examples{
 \dontrun{
-files = tools::list_files_with_exts(dir = "tests/testthat/testdata/",
+files <- tools::list_files_with_exts(dir = "tests/testthat/testdata/",
                     exts = "jpg", full.names = TRUE)
+metadata <- reading_nossaflex("tests/testthat/testdata/nossaflex_filenames.txt") |>
+    parsing_nossaflex()
+editing_exif(files, metadata)
 
+metadata <- data.table::data.table(NO = c(1, 2), SS = c(2s, 4000), A = c(1.4, 2.8),
+ FL = c(50, 50), EX = c("+2", "-1"),
+ Northing = c("N", "N"), Easting = c("E", "E"),
+ Latitude = c(54.321, 54.321), Longitude = c(12.345, 12.345),
+ Date_Time_Original = c("2024-03-19 21:40:40 +0000", "2024-04-20 12:20:10 +0000"),
+ Camera_Brand = c("Nikon", "Nikon"), Camera_Model = c("FA", "FA"),
+ Lens_Brand = c("Nikon", "Nikon"),
+ Lens_Model = c("Nikkor AF 50mm d f/1.4", "Nikkor AF 50mm d f/1.4"),
+ Lens_Focal_Length = c(50, 50), Lens_Maximum_Aperture = c(1.4, 1.4)
+)
 }
+
+
 
 }

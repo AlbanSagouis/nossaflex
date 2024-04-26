@@ -11,9 +11,8 @@ renaming_nossaflex(filenames, files, copy = FALSE)
 \code{\link{reading_nossaflex}}. With or without file extensions.}
 
 \item{files}{a character vector of paths with complete file.names like what
-\code{\link{list.files}} or
-\code{\link[tools:fileutils]{tools::list_files_with_exts}} gives when
-used with `full.names = TRUE`}
+\code{\link{list.files}} when used with `full.names = TRUE` or
+\code{\link[tools:fileutils]{tools::list_files_with_exts}} gives}
 
 \item{copy}{logical, FALSE by default.}
 }
@@ -36,10 +35,10 @@ By default, the `filenames` provided by `analog` do not have file extensions.
 }
 \examples{
 \dontrun{
-files = list.files(path = "tests/testthat/testdata/",
+files <- list.files(path = "tests/testthat/testdata/",
                   pattern = "jpg",
                   full.names = TRUE)
-files = tools::list_files_with_exts(dir = "tests/testthat/testdata/",
+files <- tools::list_files_with_exts(dir = "tests/testthat/testdata/",
                     exts = "jpg", full.names = TRUE)
 filenames = c("NO01_SS1s_A5.6_FL35_EX-2", "NO02_SS125_A5.6_FL35_EX+1")
 renaming_nossaflex(filenames, files, copy = TRUE)

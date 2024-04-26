@@ -2,7 +2,8 @@
 % Please edit documentation in R/parsing.R
 \name{parsing_custom}
 \alias{parsing_custom}
-\title{Parsing `filenames` with a consistent structure different from the classic
+\title{Parsing a custom NOSSAFLEX format
+Parsing `filenames` with a consistent structure different from the classic
 `NOSSAFLEX` structure into a data.frame}
 \usage{
 parsing_custom(filenames, format = "NO\%NO_SS\%SS_A\%A_FL\%FL_EX\%EX")
@@ -23,9 +24,11 @@ corresponds to the standard NOSSAFLEX structure as in
 `NO01_SS125_A5.6_FL35_EX+1`.}
 }
 \description{
+Parsing a custom NOSSAFLEX format
 Parsing `filenames` with a consistent structure different from the classic
 `NOSSAFLEX` structure into a data.frame
 }
 \details{
 Inspired by \code{\link[base]{strptime}}
 }
+\keyword{internal}

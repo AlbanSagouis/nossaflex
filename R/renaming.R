@@ -2,9 +2,8 @@
 #' @param filenames a character vector of file names provided by
 #'     \code{\link{reading_nossaflex}}. With or without file extensions.
 #' @param files a character vector of paths with complete file.names like what
-#'     \code{\link{list.files}} or
-#'     \code{\link[tools:fileutils]{tools::list_files_with_exts}} gives when
-#'     used with `full.names = TRUE`
+#'     \code{\link{list.files}} when used with `full.names = TRUE` or
+#'     \code{\link[tools:fileutils]{tools::list_files_with_exts}} gives
 #' @param copy logical, FALSE by default.
 #' @inherit base::files return
 #' @description
@@ -63,7 +62,7 @@ renaming_nossaflex <- function(filenames, files, copy = FALSE) {
   }
 
   if (isTRUE(copy)) {
-    checkmate::assert_access(files,     access = "w")
+    checkmate::assert_access(files, access = "w")
 
     base::file.copy(
       from = files,
