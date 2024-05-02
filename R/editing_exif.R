@@ -59,14 +59,39 @@ editing_exif <- function(files, metadata, extra_tags) {
   metadata[, colnames(metadata)[!is.element(colnames(metadata), exif_tags)] := NULL]
 
   # Converting values ----
-
   ## Excluding "auto" values ----
+  variables <- c("SS","FL","A")
+  if (any(metadata[j = ..variables] == "auto")) {
+    message('"auto" values in SS, A and FL are turned into "".')
+    metadata[j = (variables) := lapply(.SD,
+                                       function(SDcolumn) base::replace(
+                                         x = SDcolumn,
+                                         list = grep(
+                                           pattern = "auto",
+                                           x = SDcolumn,
+                                           fixed = TRUE
+                                         ),
+                                         values = ""
+                                       )),
+             .SDcols = variables]
+
+  }
 
   ## ShutterSpeedValue ----
-  metadata[j = "SS" := data.table::fifelse(grepl("s", x = metadata$SS, fixed = TRUE),
-                                           sub("s", "", x = metadata$SS, fixed = TRUE),
-                                           paste0("1/", metadata$SS))]
-  ## ApertureValue ----
+  metadata[j = "SS" := data.table::fcase(
+    grepl("s", x = SS, fixed = TRUE), sub("s", "", x = SS, fixed = TRUE),
+    !is.na(as.numeric(SS)), as.character(1 / as.numeric(SS)),
+    default = ""
+  )]
+
+
+
+  # if aperture is auto and SS no, mode is S
+  # if aperture and SS is auto, mode is P
+  # if aperture is given and SS is auto, mode is A
+
+
+
 
   # Editing exif ----
   for (i in seq_along(files)) {
@@ -106,13 +131,13 @@ editing_exif <- function(files, metadata, extra_tags) {
 # FNumber
 #Artist or Photographer	string
 # 0xa432 	LensInfo 	rational64u[4] 	ExifIFD 	(4 rational values giving focal and aperture ranges, called LensSpecification by the EXIF spec.)
-    # Value 1 : = Minimum focal length (unit: mm)
-    # Value 2 : = Maximum focal length (unit: mm)
-    # Value 3 : = Minimum F number in the minimum focal length
-    # Value 4 : = Minimum F number in the maximum focal length
-    #
-    # So, just making up numbers, if you set
-    # exiftool -LensInfo="5 10 100 200" FILE.JPG
+# Value 1 : = Minimum focal length (unit: mm)
+# Value 2 : = Maximum focal length (unit: mm)
+# Value 3 : = Minimum F number in the minimum focal length
+# Value 4 : = Minimum F number in the maximum focal length
+#
+# So, just making up numbers, if you set
+# exiftool -LensInfo="5 10 100 200" FILE.JPG
 # 0xa433 	LensMake 	string 	ExifIFD
 # 0xa434 	LensModel 	string 	ExifIFD
 # 0xa435 	LensSerialNumber 	string 	ExifIFD

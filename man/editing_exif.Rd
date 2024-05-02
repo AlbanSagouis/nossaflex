@@ -13,6 +13,8 @@ editing_exif(files, metadata, extra_tags)
 
 \item{metadata}{a data.frame as provided by \code{\link{parsing_nossaflex}},
 \code{\link{parsing_custom}} or \code{\link{parsing_json}}.}
+
+\item{extra_tags}{A Named vector of exif tags to modify.}
 }
 \description{
 Batch editing of exif data

@@ -55,6 +55,7 @@ parsing_custom <- function(filenames, format = "NO%NO_SS%SS_A%A_FL%FL_EX%EX") {}
 #'  * If Aperture uses "," as decimal separator, a "." is written instead.
 #' @inherit parsing_nossaflex return
 #' @importFrom jsonlite read_json
+#' @export
 #' @examples
 #' path = "~/idiv/my r packages/nossaflex demo/test1.json"
 
@@ -89,21 +90,20 @@ parsing_json <- function(path, apply_corrections = TRUE) {
       json$Shots,
       function(shot) shot$`Created Date`)
   )
+  if (is.element("NO", colnames(res))) data.table::setorder(x = res, NO)
 
   # LensModel
 
   # Coordinates
   res[j = c("Latitude","Longitude") := data.table::tstrsplit(
     x = sapply(
-    json$Shots,
-    function(shot) shot$`Location Coordinates`) |>
+      X = json$Shots,
+      FUN = function(shot) shot$`Location Coordinates`) |>
       gsub(pattern = "[\\[\\]]", replacement = "", perl = TRUE),
     ", ")][j = ":="(
       Northing = "N",
       Easting = "E"
     )]
-
-  data.table::setorder(res, NO)
 
   if (apply_corrections) {
     if (json$Camera$`Camera Brand` == "Voigtländer" &&
