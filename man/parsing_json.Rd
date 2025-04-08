@@ -11,7 +11,7 @@ parsing_json(path, apply_corrections = TRUE)
 
 \item{apply_corrections}{Correct known impossible values:
 
- * If Camera Brand is Voigtländer and Camera Model is Vito 70
+ * If Camera Brand is Voigtlaender and Camera Model is Vito 70
    * Aperture or Shutter Speed different from "auto" will be turned into "auto".
    * Lens Focal Length will be changed to 70mm
  * If Lens has a Maximum Aperture of 1.4, a wider aperture such as 1 will be

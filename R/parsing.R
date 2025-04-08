@@ -47,7 +47,7 @@ parsing_custom <- function(filenames, format = "NO%NO_SS%SS_A%A_FL%FL_EX%EX") {}
 #' @param path Complete path to the JSON data saved in a text file.
 #' @param apply_corrections Correct known impossible values:
 #'
-#'  * If Camera Brand is Voigtländer and Camera Model is Vito 70
+#'  * If Camera Brand is Voigtlaender and Camera Model is Vito 70
 #'    * Aperture or Shutter Speed different from "auto" will be turned into "auto".
 #'    * Lens Focal Length will be changed to 70mm
 #'  * If Lens has a Maximum Aperture of 1.4, a wider aperture such as 1 will be
@@ -106,12 +106,11 @@ parsing_json <- function(path, apply_corrections = TRUE) {
     )]
 
   if (apply_corrections) {
-    if (json$Camera$`Camera Brand` == "Voigtländer" &&
+    if (json$Camera$`Camera Brand` == "Voigtlaender" &&
         json$Camera$`Camera Model` == "Vito 70") {
       res[j = Lens_Focal_Length := 70L]
       res[j = c("SS", "A") := "auto"]
     }
   }
-
   return(res)
 }

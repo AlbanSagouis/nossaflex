@@ -40,5 +40,4 @@ metadata <- data.table::data.table(NO = c(1, 2), SS = c(2s, 4000), A = c(1.4, 2.
 }
 
 
-
 }

@@ -21,6 +21,7 @@ Description: This package relies on a file naming convention for, essentially an
     and edit their exif metadata with corresponding shot information.
 URL: https://nossaflex.io/, https://github.com/albansagouis/nossaflex/
 License: GPL (>= 3)
+BugReports: https://github.com/albansagouis/nossaflex/issues
 Depends: R (>= 4.1.0)
 Imports:
     exiftoolr,
@@ -32,7 +33,8 @@ Suggests:
     withr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Config/testthat/parallel: true
+Config/testthat/parallel: false
+Config/testthat/start-first: *reading*, *parsing*, *insert*, *renaming*
 Language: en-GB
 Encoding: UTF-8
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2

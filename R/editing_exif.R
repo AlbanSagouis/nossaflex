@@ -26,7 +26,7 @@
 #' }
 #'
 #'
-#'
+
 editing_exif <- function(files, metadata, extra_tags) {
   base::stopifnot("metadata must have as many rows as the length of files" =
                     length(files) == nrow(metadata))
