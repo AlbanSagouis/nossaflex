@@ -3,6 +3,8 @@
 #' @param metadata a data.frame as provided by \code{\link{parsing_nossaflex}},
 #' \code{\link{parsing_custom}} or \code{\link{parsing_json}}.
 #' @param extra_tags A Named vector of exif tags to modify.
+#' @param overwrite_original logical, if TRUE, no copy is created by `exiftool`. See <https://exiftool.org/forum/index.php?topic=13191.msg71304#msg71304>
+#' @param verbose passes `-v2` argument to `exiftool`
 #' @importFrom data.table :=
 #' @export
 #' @examples
@@ -27,89 +29,198 @@
 #'
 #'
 
-editing_exif <- function(files, metadata, extra_tags) {
-  base::stopifnot("metadata must have as many rows as the length of files" =
-                    length(files) == nrow(metadata))
+###################
+# IDEA
+# 1) taking advantage of exiftool ability to read tags in a csv directly
+# import from CSV file https://exiftool.org/faq.html#Q26
+# exiftool -csv="c:\Users\Phil\test.csv" "c:\Users\Phil\Images"
+##############
+# 2) taking advantage of exiftool batch execution abilities
+editing_exif <- function(
+  files,
+  metadata,
+  extra_tags,
+  overwrite_original = FALSE,
+  verbose = TRUE
+) {
+  base::stopifnot(
+    "metadata must have as many rows as the length of files" = length(files) ==
+      nrow(metadata)
+  )
 
   # Deleting columns with unknown tags ----
   exif_tags <- c(
     # Shot
-    "NO", "SS", "A",
-    "FL", "EX",
-    "Northing", "Easting",
-    "Latitude", "Longitude",
+    "NO",
+    "SS",
+    #"ShutterSpeed", # not writable
+    "ExposureTime",
+    "A",
+    "FNumber",
+    "FL",
+    "FocalLengthIn35mmFormat",
+    #"FocalLength35efl", # not writable
+    "EX",
+    "Northing",
+    "Easting",
+    "Latitude",
+    "Longitude",
     "Date_Time_Original",
+    "Focus_Mode",
     #Camera
-    "Camera_Brand", "Camera_Model",
+    "Camera_Brand",
+    "Camera_Model",
     # Lens
-    "Lens_Brand", "Lens_Model", "Lens_Focal_Length", "Lens_Maximum_Aperture"
+    "Lens_Brand",
+    "Lens_Model",
+    "Lens_Focal_Length",
+    "Lens_Maximum_Aperture",
+    # Nikon lens
+    "Nikon:LensIDNumber",
+    "Nikon:LensFStops",
+    "Nikon:MinFocalLength",
+    "Nikon:MaxFocalLength",
+    "Nikon:MaxApertureAtMinFocal",
+    "Nikon:MaxApertureAtMaxFocal",
+    "Nikon:MCUVersion",
+    "Nikon:LensType",
+    #"Nikon:LensSpec", # composite
+    #"Nikon:LensID", # composite
+    # "Lens_ID", # composite
+    # Film stock
+    "Stock",
+    "ISO",
+    # Flash
+    "Flash"
   )
 
   exif_names <- c(
     # Shot
-    "ImageNumber", "ShutterSpeedValue", "FNumber",
-    "FocalLength", "ExposureCompensation",
-    "GPSLatitudeRef", "GPSLongitudeRef",
-    "GPSLatitude", "GPSLongitude",
+    "ImageNumber",
+    "ShutterSpeedValue",
+    #"ShutterSpeed", # not writable
+    "ExposureTime",
+    "FNumber",
+    "Aperture",
+    "FocalLength",
+    "FocalLengthIn35mmFormat",
+    # "FocalLength35efl", # not writable
+    "ExposureCompensation",
+    "GPSLatitudeRef",
+    "GPSLongitudeRef",
+    "GPSLatitude",
+    "GPSLongitude",
     "DateTimeOriginal",
+    "FocusMode",
     # Camera
-    "Make","Model",
+    "Make",
+    "Model",
     # Lens
-    "LensMake", "LensModel", "MaxFocalLength", "MaxApertureValue")
-  metadata[, colnames(metadata)[!is.element(colnames(metadata), exif_tags)] := NULL]
+    "LensMake",
+    "LensModel",
+    "MaxFocalLength",
+    "MaxApertureValue",
+    # Nikon lens
+    "Nikon:LensIDNumber",
+    "Nikon:LensFStops",
+    "Nikon:MinFocalLength",
+    "Nikon:MaxFocalLength",
+    "Nikon:MaxApertureAtMinFocal",
+    "Nikon:MaxApertureAtMaxFocal",
+    "Nikon:MCUVersion",
+    "Nikon:LensType",
+    #"Nikon:LensSpec", # composite
+    #"Nikon:LensID", # composite
+    # "LensID", # composite
+    # Film stock
+    "ProfileName",
+    "ISO",
+    # Flash
+    "Flash"
+  )
+
+  checkmate::assert_true(length(exif_tags) == length(exif_names))
+
+  metadata[
+    j = colnames(metadata)[!is.element(colnames(metadata), exif_tags)] := NULL
+  ]
 
   # Converting values ----
   ## Excluding "auto" values ----
-  variables <- c("SS","FL","A")
+  variables <- c("SS", "FL", "A")
   if (any(metadata[j = ..variables] == "auto")) {
     message('"auto" values in SS, A and FL are turned into "".')
-    metadata[j = (variables) := lapply(.SD,
-                                       function(SDcolumn) base::replace(
-                                         x = SDcolumn,
-                                         list = grep(
-                                           pattern = "auto",
-                                           x = SDcolumn,
-                                           fixed = TRUE
-                                         ),
-                                         values = ""
-                                       )),
-             .SDcols = variables]
-
+    metadata[
+      j = (variables) := lapply(
+        .SD,
+        function(SDcolumn)
+          base::replace(
+            x = SDcolumn,
+            list = grep(
+              pattern = "auto",
+              x = SDcolumn,
+              fixed = TRUE
+            ),
+            values = ""
+          )
+      ),
+      .SDcols = variables
+    ]
   }
 
   ## ShutterSpeedValue ----
-  metadata[j = "SS" := data.table::fcase(
-    grepl("s", x = SS, fixed = TRUE), sub("s", "", x = SS, fixed = TRUE),
-    !is.na(as.numeric(SS)), as.character(1 / as.numeric(SS)),
-    default = ""
-  )]
-
-
+  metadata[
+    j = "SS" := data.table::fcase(
+      grepl("/", x = SS, fixed = TRUE),
+      SS,
+      grepl("s", x = SS, fixed = TRUE),
+      sub("s", "", x = SS, fixed = TRUE),
+      !is.na(as.numeric(SS)),
+      as.character(1 / as.numeric(SS)),
+      default = ""
+    )
+  ]
+  ## ExposureTime & ShutterSpeed----
+  metadata[
+    j = "ExposureTime" := data.table::fcase(
+      grepl("/", x = SS, fixed = TRUE),
+      (1 / sub("1/", "", ExposureTime, fixed = TRUE) |> as.integer()) |>
+        as.character(),
+      grepl("s", x = SS, fixed = TRUE),
+      sub("s", "", x = SS, fixed = TRUE),
+      default = ""
+    )
+  ]
 
   # if aperture is auto and SS no, mode is S
   # if aperture and SS is auto, mode is P
   # if aperture is given and SS is auto, mode is A
 
-
-
-
   # Editing exif ----
   for (i in seq_along(files)) {
     arguments <- metadata[i, ]
 
-    arguments <- stats::setNames(object = arguments,
-                                 exif_names[match(
-                                   x = names(arguments),
-                                   table = exif_tags,
-                                   nomatch = 0L)]
+    arguments <- stats::setNames(
+      object = arguments,
+      exif_names[match(
+        x = names(arguments),
+        table = exif_tags,
+        nomatch = 0L
+      )]
     )
-    arguments <- sapply(seq_along(arguments),
-                        function(j) stringi::stri_join("-", names(arguments)[[j]],
-                                                       "=", arguments[[j]]))
+    arguments <- sapply(
+      seq_along(arguments),
+      function(j)
+        stringi::stri_join("-", names(arguments)[[j]], "=", arguments[[j]])
+    )
 
-    exiftoolr::exif_call(path = files[[i]],
-                         args = arguments,
-                         quiet = FALSE)
+    if (isTRUE(overwrite_original)) arguments <- c("-overwrite_original", arguments)
+
+    if (isTRUE(verbose)) arguments <- c("-v2", arguments)
+
+    print(arguments)
+
+    exiftoolr::exif_call(path = files[[i]], args = arguments, quiet = FALSE)
   }
 }
 
@@ -123,7 +234,7 @@ editing_exif <- function(files, metadata, extra_tags) {
 #          "-ExposureCompensation=+1",# better than ExposureBiasValue ?
 #          "-model=Nikon FA",
 #          "-LensMake=Nikon",
-#          "-LensModel=50mm 1.4d"),
+#          "-LensModel=50mm 1.4D"),
 # Camera ----
 # Model
 # Lens ----

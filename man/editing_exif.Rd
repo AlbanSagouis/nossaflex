@@ -4,7 +4,13 @@
 \alias{editing_exif}
 \title{Batch editing of exif data}
 \usage{
-editing_exif(files, metadata, extra_tags)
+editing_exif(
+  files,
+  metadata,
+  extra_tags,
+  overwrite_original = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{files}{a character vector of paths with complete file.names like what
@@ -15,6 +21,10 @@ editing_exif(files, metadata, extra_tags)
 \code{\link{parsing_custom}} or \code{\link{parsing_json}}.}
 
 \item{extra_tags}{A Named vector of exif tags to modify.}
+
+\item{overwrite_original}{logical, if TRUE, no copy is created by `exiftool`. See <https://exiftool.org/forum/index.php?topic=13191.msg71304#msg71304>}
+
+\item{verbose}{passes `-v2` argument to `exiftool`}
 }
 \description{
 Batch editing of exif data
