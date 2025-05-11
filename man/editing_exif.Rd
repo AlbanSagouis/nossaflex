@@ -29,6 +29,9 @@ editing_exif(
 \description{
 Batch editing of exif data
 }
+\details{
+Editing the `maker`, `model` and various `makerNotes` tags before or during darktable editing will most likely render the file unsuable for darktable since it uses these fields for parameterising the editing treatments.
+}
 \examples{
 \dontrun{
 files <- tools::list_files_with_exts(dir = "tests/testthat/testdata/",

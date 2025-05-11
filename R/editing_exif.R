@@ -5,6 +5,9 @@
 #' @param extra_tags A Named vector of exif tags to modify.
 #' @param overwrite_original logical, if TRUE, no copy is created by `exiftool`. See <https://exiftool.org/forum/index.php?topic=13191.msg71304#msg71304>
 #' @param verbose passes `-v2` argument to `exiftool`
+#' @details
+#' Editing the `maker`, `model` and various `makerNotes` tags before or during darktable editing will most likely render the file unsuable for darktable since it uses these fields for parameterising the editing treatments.
+#'
 #' @importFrom data.table :=
 #' @export
 #' @examples
