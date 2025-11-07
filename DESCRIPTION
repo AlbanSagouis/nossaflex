@@ -1,7 +1,7 @@
 Package: nossaflex
 Type: Package
 Title: Edit Exif Data of Pictures
-Version: 0.1.9002
+Version: 0.1.9003
 Author: c(
   person("Alban", "Sagouis", role = c("aut","cre"),
         email = "sagouis@pm.me",

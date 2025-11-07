@@ -16,14 +16,17 @@
 #' parsing_nossaflex(filenames)
 
 parsing_nossaflex <- function(filenames) {
-  stringi::stri_split_regex(str = filenames,
-                            pattern = "_") |>
+  stringi::stri_split_regex(str = filenames, pattern = "_") |>
     lapply(function(split_filename) {
-      stringi::stri_replace_all_regex(split_filename,
-                                      pattern = "[A-Z]",
-                                      replacement = "") |>
-        stats::setNames(stringi::stri_extract_all_regex(split_filename,
-                                                        pattern = "[A-Z]{1,2}")) |>
+      stringi::stri_replace_all_regex(
+        split_filename,
+        pattern = "[A-Z]",
+        replacement = ""
+      ) |>
+        stats::setNames(stringi::stri_extract_all_regex(
+          split_filename,
+          pattern = "[A-Z]{1,2}"
+        )) |>
         as.list()
     }) |>
     data.table::rbindlist(fill = TRUE)
@@ -57,7 +60,8 @@ parsing_custom <- function(filenames, format = "NO%NO_SS%SS_A%A_FL%FL_EX%EX") {}
 #' @importFrom jsonlite read_json
 #' @export
 #' @examples
-#' path = "~/idiv/my r packages/nossaflex demo/test1.json"
+#' path = "~/Projects/my r packages/nossaflex demo/test1.json"
+#' parsing_json(path)
 
 parsing_json <- function(path, apply_corrections = TRUE) {
   checkmate::assert_access(path, access = "r")
@@ -76,41 +80,95 @@ parsing_json <- function(path, apply_corrections = TRUE) {
       gsub(pattern = "Shot ", replacement = "") |>
       as.integer(),
     SS = sapply(json$Shots, function(shot) shot$`Shutter Speed`),
-    A  = sapply(json$Shots, function(shot) shot$`Aperture`),
+    A = sapply(json$Shots, function(shot) shot$`Aperture`),
     FL = sapply(json$Shots, function(shot) shot$`Focal Length`),
     Lens_Brand = sapply(json$Shots, function(shot) shot$Lens$`Lens Brand`),
     Lens_Maximum_Aperture = sapply(
       json$Shots,
-      function(shot) shot$Lens$`Lens Maximum Aperture`),
+      function(shot) shot$Lens$`Lens Maximum Aperture`
+    ),
     Lens_Focal_Length = sapply(
       json$Shots,
-      function(shot) shot$Lens$`Lens Focal Length`),
+      function(shot) shot$Lens$`Lens Focal Length`
+    ),
     EX = sapply(json$Shots, function(shot) shot$`Exposure`),
     Date_Time_Original = sapply(
       json$Shots,
-      function(shot) shot$`Created Date`)
+      function(shot) shot$`Created Date`
+    )
   )
-  if (is.element("NO", colnames(res))) data.table::setorder(x = res, NO)
-
-  # LensModel
+  if (is.element("NO", colnames(res))) {
+    data.table::setorder(x = res, NO)
+  }
 
   # Coordinates
-  res[j = c("Latitude","Longitude") := data.table::tstrsplit(
-    x = sapply(
-      X = json$Shots,
-      FUN = function(shot) shot$`Location Coordinates`) |>
-      gsub(pattern = "[\\[\\]]", replacement = "", perl = TRUE),
-    ", ")][j = ":="(
+  res[
+    j = c("Latitude", "Longitude") := data.table::tstrsplit(
+      x = sapply(
+        X = json$Shots,
+        FUN = function(shot) shot$`Location Coordinates`
+      ) |>
+        gsub(pattern = "[\\[\\]]", replacement = "", perl = TRUE),
+      ", "
+    )
+  ][
+    j = ":="(
       Northing = "N",
       Easting = "E"
-    )]
+    )
+  ]
 
   if (apply_corrections) {
-    if (json$Camera$`Camera Brand` == "Voigtlaender" &&
-        json$Camera$`Camera Model` == "Vito 70") {
+    if (
+      json$Camera$`Camera Brand` == "Voigtlaender" &&
+        json$Camera$`Camera Model` == "Vito 70"
+    ) {
       res[j = Lens_Focal_Length := 70L]
       res[j = c("SS", "A") := "auto"]
     }
   }
+
+  return(res[])
+}
+
+
+#' Parsing the JSON data sent by the `Frames` app
+#' @param path Complete path to the .frames / JSON data
+#' @inherit parsing_nossaflex return
+#' @importFrom jsonlite read_json
+#' @export
+#' @examples
+#' path = '~/Projects/my r packages/nossaflex demo/Berlin_Boat.frames'
+#' parsing_frames(path)
+
+parsing_frames <- function(path) {
+  checkmate::assert_access(path, access = "r")
+
+  json <- jsonlite::read_json(path = path, simplifyVector = TRUE)
+
+  res <- data.table::data.table(
+    Roll_Name = json$name,
+
+    Camera_Brand = json$camera$make,
+    Camera_Model = json$camera$model,
+
+    NO = json$frames$number,
+    SS = json$frames$shutterSpeed,
+    A = json$frames$aperture,
+    # FL = sapply(json$frames, function(shot) shot$`Focal Length`),
+    Lens_Brand = json$frames$lens.make,
+    Lens_Maximum_Aperture = json$frames$lens.maxAperture,
+    Lens_Focal_Length = json$frames$lens.maxFocalLength,
+    EX = json$frames$exposure,
+    Date_Time_Original = json$frames$createdAt,
+    Latitude = json$frames$latitude,
+    Longitude = json$frames$longitude,
+    Northing = "N",
+    Easting = "E"
+  )
+  if (is.element("NO", colnames(res))) {
+    data.table::setorder(x = res, NO)
+  }
+
   return(res)
 }
