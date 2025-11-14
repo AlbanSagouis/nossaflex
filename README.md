@@ -1,14 +1,13 @@
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# nossaflex
+# APMD
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/AlbanSagouis/nossaflex/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AlbanSagouis/nossaflex/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/AlbanSagouis/APMD/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AlbanSagouis/APMD/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The nossaflex package is the entry of the NOSSAFLEX file naming
+## Analog Photography MetaData
+
+The APMD package is the entry of the NOSSAFLEX file naming
 convention into the R universe to help scientific, professional or
 amateur photographers to name their picture files consistently and
 informatively.
@@ -32,46 +31,49 @@ Here is an explanation from the creators:
 NOSSAFLEX file names looks like this: `NO03_SS250_A8_FL80_EX0.jpg` or
 this: `NO34_SS30_A2.8_FL35_EX+1.tiff`!
 
-Learn more on their \[website\]{<https://nossaflex.io/the-system>} or on
-their \[Youtube channel\]{<https://www.youtube.com/@NOSSAFLEX>}.
+Learn more on their [website](https://nossaflex.io/the-system) or on
+their [Youtube channel](https://www.youtube.com/@NOSSAFLEX).
 
 ## The package
 
-Here are the two main functions in the package:
+Here are the main functions in the package:
 
 - `renaming_nossaflex` batch-renames picture files from uninformative
   `DSC_00345.jpg` to information-rich NOSSAFLEX name based on data
   provided by the user, see {analog} section:
   `NO03_SS250_A8_FL80_EX0.jpg`.
+- `parsing_json` and `parsing_frames` parse data in JSON format as exported by
+  the analog&trade; app and Frames&trade; app respectively.
 - `editing_exif` batch-saves the metadata of the pictures into the exif
   slots of the scan files (jpg, tiff, etc).
 
-## Analog or an other app
+## Analog&trade;, Datafilm&trade;, Frames&trade; or an other app
 
 ## The workflow
 
-## Installation
+### Installation
 
-You can install the development version of nossaflex from
+You can install the development version of APMD from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-# devtools::install_github("AlbanSagouis/nossaflex")
+remotes::install_github("AlbanSagouis/APMD")
 ```
 
-## Example
-
+### Usage
+#### Renaming files
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(nossaflex)
+library(APMD)
 files <- c("Pictures/2024/01 02 Winter in Berlin/DSC_001034",
            "Pictures/2024/01 02 Winter in Berlin/DSC_001035",
            "Pictures/2024/01 02 Winter in Berlin/DSC_001036")
 filenames <- reading_nossaflex(path = "path_to_the_filenames.txt") # provided by the `analog` app
 renaming_nossaflex(filenames = filenames, files = files)
 ```
+
+#### Saving exif data
 
 Additionally you may want to safely save the shots metadata inside the
 scan files:
@@ -85,10 +87,10 @@ editing_exif(files, metadata)
 ## Related work
 
 The package relies heavily on the great
-`exiftoolr`{<https://github.com/JoshOBrien/exiftoolr/>} package by
+`exiftoolr` {<https://github.com/JoshOBrien/exiftoolr/>} package by
 @JoshOBrien which itself depends on the great
-`exiftool`{<https://exiftool.org/>} software by Phil Harvey. Finally,
-jExifToolGUI{<https://github.com/hvdwolf/jExifToolGUI>} offers exif
+`exiftool` {<https://exiftool.org/>} software by Phil Harvey. Finally,
+jExifToolGUI {<https://github.com/hvdwolf/jExifToolGUI>} offers exif
 editing and with a Graphical Interface, nice. And for Apple users, the
-Frames iPhone and Mac apps allow integrated shot metadata recording and
-including the metadata in the exif slots.
+Frames&trade; iPhone and Mac apps allow integrated shot metadata recording and
+including the metadata in the exif slots with a great GUI.

@@ -16,6 +16,6 @@ A data.frame with standard columns from nossaflex convention.
 Parsing the JSON data sent by the `Frames` app
 }
 \examples{
-path = '~/Projects/my r packages/nossaflex demo/Berlin_Boat.frames'
+path = '~/Projects/my r packages/APMD demo/Berlin_Boat.frames'
 parsing_frames(path)
 }

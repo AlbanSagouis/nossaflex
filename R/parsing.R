@@ -60,7 +60,7 @@ parsing_custom <- function(filenames, format = "NO%NO_SS%SS_A%A_FL%FL_EX%EX") {}
 #' @importFrom jsonlite read_json
 #' @export
 #' @examples
-#' path = "~/Projects/my r packages/nossaflex demo/test1.json"
+#' path = "~/Projects/my r packages/APMD demo/test1.json"
 #' parsing_json(path)
 
 parsing_json <- function(path, apply_corrections = TRUE) {
@@ -138,7 +138,7 @@ parsing_json <- function(path, apply_corrections = TRUE) {
 #' @importFrom jsonlite read_json
 #' @export
 #' @examples
-#' path = '~/Projects/my r packages/nossaflex demo/Berlin_Boat.frames'
+#' path = '~/Projects/my r packages/APMD demo/Berlin_Boat.frames'
 #' parsing_frames(path)
 
 parsing_frames <- function(path) {
