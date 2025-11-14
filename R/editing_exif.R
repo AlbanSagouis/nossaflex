@@ -74,6 +74,7 @@ editing_exif <- function(
     "Camera_Brand",
     "Camera_Model",
     # Lens
+    "Lens",
     "Lens_Brand",
     "Lens_Model",
     "Lens_Focal_Length",
@@ -103,8 +104,8 @@ editing_exif <- function(
     "ShutterSpeedValue",
     #"ShutterSpeed", # not writable
     "ExposureTime",
-    "FNumber",
     "Aperture",
+    "FNumber",
     "FocalLength",
     "FocalLengthIn35mmFormat",
     # "FocalLength35efl", # not writable
@@ -119,6 +120,7 @@ editing_exif <- function(
     "Make",
     "Model",
     # Lens
+    "XMP:Lens",
     "LensMake",
     "LensModel",
     "MaxFocalLength",

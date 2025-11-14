@@ -8,9 +8,9 @@ Author: c(
         comment = c(ORCID = "0000-0002-3827-1063")))
 Maintainer: Alban Sagouis <sagouis@pm.me>
 Description: This package relies on a file naming convention for, essentially analog,
-    photography. Photographs taken on film, then developed and then scanned are lacking
-    important metadata or if they have, it's from the scanning device, not the
-    original camera.
+    photography. Photographs taken on film, then developed and then scanned are
+    lacking important metadata or if they have, it's from the scanning device,
+    not the original camera.
     The nossaflex package takes NOSSAFLEX structured file names
     and can 1) batch rename corresponding pictures and 2) edit their exif data
     to add information such as focal length, shutter speed, aperture, information
@@ -37,4 +37,4 @@ Config/testthat/parallel: false
 Config/testthat/start-first: *reading*, *parsing*, *insert*, *renaming*
 Language: en-GB
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3

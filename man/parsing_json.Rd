@@ -25,5 +25,6 @@ A data.frame with standard columns from nossaflex convention.
 Parsing the JSON data sent by the `Analog` app
 }
 \examples{
-path = "~/idiv/my r packages/nossaflex demo/test1.json"
+path = "~/Projects/my r packages/nossaflex demo/test1.json"
+parsing_json(path)
 }

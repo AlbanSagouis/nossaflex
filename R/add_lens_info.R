@@ -15,6 +15,9 @@
 #'   Additional lenses can be added here, the information listed here can be
 #'   found in the exif data of pictures taken with the additional lenses.
 #'
+#'   `Nikon:LensType` = 2 for D lenses and 0 for non-D lenses
+#'   Exact values for the fields such as `Nikon:MinFocalLength` were obtained
+#'   by shooting the lens with a DSLR and looking at the EXIF data.
 #' @seealso See <https://exiftool.org/TagNames/Nikon.html#LensID> for the list
 #'    of standard lens names
 #' @rdname adding_lens_info
@@ -31,7 +34,7 @@ add_lens_data_nikon_AF_28_105_D <- function() {
     `Nikon:LensType` = 2,
     `Nikon:LensSpec` = "28 105 3.6 4.5 2",
     `Nikon:LensID` = "AF Zoom-Nikkor 28-105mm f/3.5-4.5D IF",
-  check.names = FALSE
+    check.names = FALSE
   )
 }
 
@@ -108,6 +111,25 @@ add_lens_data_nikon_AF_105_D <- function() {
     `Nikon:LensType` = 2,
     `Nikon:LensSpec` = "105 105 2.8 2.8 2",
     `Nikon:LensID` = "AF Micro-Nikkor 105mm f/2.8D",
+    check.names = FALSE
+  )
+}
+
+#' Sigma AF 28-70 f2.8
+#' @rdname adding_lens_info
+#' @export
+add_lens_data_sigma_AF_28_70_D <- function() {
+  data.frame(
+    `Nikon:LensIDNumber` = 50, # check
+    `Nikon:LensFStops` = 7, # check
+    `Nikon:MinFocalLength` = 28.28, # check
+    `Nikon:MaxFocalLength` = 70, # check
+    `Nikon:MaxApertureAtMinFocal` = 2.828, # check
+    `Nikon:MaxApertureAtMaxFocal` = 2.828, # check
+    `Nikon:MCUVersion` = 53, # check
+    `Nikon:LensType` = 2,
+    `Nikon:LensSpec` = "28 70 2.8 2.8 2",
+    `Nikon:LensID` = "Sigma 28-70mm F2.8",
     check.names = FALSE
   )
 }

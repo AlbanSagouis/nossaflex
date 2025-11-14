@@ -6,6 +6,7 @@
 \alias{add_lens_data_nikon_AF_50_D}
 \alias{add_lens_data_nikon_AF_85}
 \alias{add_lens_data_nikon_AF_105_D}
+\alias{add_lens_data_sigma_AF_28_70_D}
 \title{Nikon AF 28-105 D}
 \usage{
 add_lens_data_nikon_AF_28_105_D()
@@ -17,6 +18,8 @@ add_lens_data_nikon_AF_50_D()
 add_lens_data_nikon_AF_85()
 
 add_lens_data_nikon_AF_105_D()
+
+add_lens_data_sigma_AF_28_70_D()
 }
 \description{
 Nikon AF 28-105 D
@@ -28,6 +31,8 @@ Nikon AF 50 D
 Nikon AF 85
 
 Nikon AF 105 D
+
+Sigma AF 28-70 f2.8
 }
 \details{
 To help `exiftoolr` to guess the lend ID, we can provide a lens of favourite
@@ -44,6 +49,10 @@ To help `exiftoolr` to guess the lend ID, we can provide a lens of favourite
 
   Additional lenses can be added here, the information listed here can be
   found in the exif data of pictures taken with the additional lenses.
+
+  `Nikon:LensType` = 2 for D lenses and 0 for non-D lenses
+  Exact values for the fields such as `Nikon:MinFocalLength` were obtained
+  by shooting the lens with a DSLR and looking at the EXIF data.
 }
 \seealso{
 See <https://exiftool.org/TagNames/Nikon.html#LensID> for the list
