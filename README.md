@@ -3,6 +3,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/AlbanSagouis/APMD/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AlbanSagouis/APMD/actions/workflows/R-CMD-check.yaml)
+[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 <!-- badges: end -->
 
 ## Analog Photography MetaData
@@ -22,11 +23,9 @@ data quality.
 
 Here is an explanation from the creators:
 
-> It’s as easy as the name – NOSSAFLEX has all of the information in the
-> title.
+> It’s as easy as the name – NOSSAFLEX has all of the information in the title.
 >
-> NO = Number SS = Shutter Speed A = Aperture FL = Focal Length EX =
-> Exposure
+> NO = Number SS = Shutter Speed A = Aperture FL = Focal Length EX = Exposure
 
 NOSSAFLEX file names looks like this: `NO03_SS250_A8_FL80_EX0.jpg` or
 this: `NO34_SS30_A2.8_FL35_EX+1.tiff`!

@@ -4,7 +4,7 @@
 \name{APMD-package}
 \alias{APMD}
 \alias{APMD-package}
-\title{APMD: Edit Exif Data of Pictures}
+\title{APMD: Analog Photography MetaData - Edit Exif Data of Pictures}
 \description{
 The APMD package is developed in GitHub
 (https://github.com/albansagouis/APMD). To see the preferable citation of

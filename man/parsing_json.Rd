@@ -25,6 +25,8 @@ A data.frame with standard columns from nossaflex convention.
 Parsing the JSON data sent by the `Analog` app
 }
 \examples{
-path = "~/Projects/my r packages/APMD demo/test1.json"
+\dontrun{
+path = "tests/testthat/testdata/test1.json"
 parsing_json(path)
+}
 }
